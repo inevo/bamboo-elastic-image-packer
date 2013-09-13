@@ -1,0 +1,1 @@
+NPM = "#{node['nodejs']['dir']}/bin/npm"

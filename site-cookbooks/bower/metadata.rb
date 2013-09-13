@@ -1,0 +1,3 @@
+name "bower"
+
+depends "npm"

@@ -1,0 +1,3 @@
+name "grunt"
+
+depends "npm"
