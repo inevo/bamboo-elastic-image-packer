@@ -8,6 +8,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # DRY, let's read the config from the packet config
   bamboo_elastic = JSON.parse(File.read("bamboo_elastic.json"))
 
+  # find the shell provisioner
+  shellp = bamboo_elastic["provisioners"].find {|p| p["type"] == "shell"}
+
+  shellp["scripts"].each {|s| 
+    config.vm.provision "shell", path: s
+  }
+
   # find the chef-solo provisioner
   p = bamboo_elastic["provisioners"].find {|p| p["type"] == "chef-solo"}
 
