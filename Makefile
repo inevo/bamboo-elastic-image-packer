@@ -36,6 +36,10 @@ $(PACKER):
 	unzip -d $(DEPS)/packer $(DEPS)/packer/$(PACKER_FILENAME)
 	rm $(DEPS)/packer/$(PACKER_FILENAME)
 
+ssh_key:
+	ssh-keygen -C bamboo -f files/ssh/id_rsa
+	cat files/ssh/id_rsa
+
 aws: $(PACKER)
 	$(PACKER) build -only=aws -var-file=aws_config.json bamboo_elastic.json
 
