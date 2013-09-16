@@ -39,5 +39,8 @@ $(PACKER):
 aws: $(PACKER)
 	$(PACKER) build -only=aws -var-file=aws_config.json bamboo_elastic.json
 
+aws_debug: $(PACKER)
+	PACKER_LOG=1 PACKER_LOG_PATH=packer.log $(PACKER) build -debug -only=aws -var-file=aws_config.json bamboo_elastic.json
+
 vagrant: $(VAGRANT)
 	$(VAGRANT) up
