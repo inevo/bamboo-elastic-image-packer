@@ -8,20 +8,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # DRY, let's read the config from the packet config
   bamboo_elastic = JSON.parse(File.read("bamboo_elastic.json"))
 
-  # find the shell provisioner
-  shellp = bamboo_elastic["provisioners"].find {|p| p["type"] == "shell"}
+  bamboo_elastic["provisioners"].each do |p| 
+    case p["type"]
 
-  shellp["scripts"].each {|s| 
-    config.vm.provision "shell", path: s
-  }
+      # shell provisioner
+      when "shell" 
+        p["scripts"].each {|s| 
+          config.vm.provision "shell", path: s
+        }
 
-  # find the chef-solo provisioner
-  p = bamboo_elastic["provisioners"].find {|p| p["type"] == "chef-solo"}
+      # chef-solo provisioner
+      when "chef-solo"
+        config.vm.provision :chef_solo do |chef|
+          chef.cookbooks_path = p["cookbook_paths"]
+          chef.json = p["json"]
+          p["run_list"].each {|r| chef.add_recipe r} 
+        end
 
-  config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = p["cookbook_paths"]
-    chef.json = p["json"]
-    p["run_list"].each {|r| chef.add_recipe r} 
+      when "file"
+        config.vm.provision "shell", inline: "cp /vagrant/#{p['source']} #{p['destination']}"
+    end
   end
-
+  
 end
