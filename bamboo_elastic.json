@@ -49,7 +49,8 @@
             "oracle": { "accept_oracle_download_terms": true}
         },
         "maven": {
-            "m2_home": "/opt/maven-3.0"
+            "m2_home": "/opt/maven-3.0",
+            "repository_root": "~/.m2/repository"
         },
         "nodejs": {
             "install_method": "binary",
@@ -58,6 +59,29 @@
             "check_sha": false
         }
       }
+    },
+    // Copy some config files to the server's /tmp
+    {
+      "type": "file",
+      "source": "files/maven/settings.xml",
+      "destination": "/tmp/settings.xml"
+    },
+    {
+      "type": "file",
+      "source": "files/ssh/id_rsa",
+      "destination": "/tmp/id_rsa"
+    },
+    {
+      "type": "file",
+      "source": "files/ssh/id_rsa.pub",
+      "destination": "/tmp/id_rsa.pub"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/setup_files.sh"
+      ],
+      "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'"
     }
   ]
 }
