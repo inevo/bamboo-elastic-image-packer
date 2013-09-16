@@ -2,3 +2,5 @@
 .vagrant
 aws_config.json
 packer_cache
+*.pem
+*.log
